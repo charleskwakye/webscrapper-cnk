@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "G+CtM16ixhJfwQtPoK9MiDDQk45y4vUP9cNOP83G3Ae/EtR049SCGKug3iwbm37S8suS7la2615O8pTnfrhFuQ==",
+  "success": true,
+  "projectFilePath": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper/WebscrapperDemo/WebscraperDemo.csproj",
+  "expectedPackageFiles": [
+    "/Users/charlesnanakwakye/.nuget/packages/csvhelper/30.0.1/csvhelper.30.0.1.nupkg.sha512",
+    "/Users/charlesnanakwakye/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",
+    "/Users/charlesnanakwakye/.nuget/packages/selenium.support/4.7.0/selenium.support.4.7.0.nupkg.sha512",
+    "/Users/charlesnanakwakye/.nuget/packages/selenium.webdriver/4.7.0/selenium.webdriver.4.7.0.nupkg.sha512",
+    "/Users/charlesnanakwakye/.nuget/packages/selenium.webdriver.chromedriver/108.0.5359.7100/selenium.webdriver.chromedriver.108.0.5359.7100.nupkg.sha512"
+  ],
+  "logs": []
+}

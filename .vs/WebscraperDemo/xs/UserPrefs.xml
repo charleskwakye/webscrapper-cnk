@@ -1,0 +1,23 @@
+﻿<Properties StartupConfiguration="{64827993-62B4-4948-A8E1-013529684794}|Default" GitUserInfo="UsingGIT">
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.Workbench ActiveDocument="WebscrapperDemo/Program.cs">
+    <Files>
+      <File FileName="WebscrapperDemo/Program.cs" Line="25" Column="38" IsPinned="True" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="WebscraperDemo" expanded="True">
+            <Node name="WebscraperDemo" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.WebscraperDemo PreferredExecutionTarget="MonoDevelop.Default" />
+</Properties>
