@@ -17,14 +17,13 @@ using System.Text.Json.Nodes;
 using System.Diagnostics;
 using System.Security.Claims;
 
-// Class to represent a movie object
-public class Movie
+// Class to represent a video object
+public class Video
 {
-    public string? Title { get; set; }
-    public string? Score { get; set; }
-    public int Year { get; set; }
-    public string? Cast { get; set; }
     public string? Link { get; set; }
+    public string? VideoTitle { get; set; }
+    public string? Uploader { get; set; }
+    public string? NumberOfViews { get; set; }
 }
 
 // Class to represent a job object
@@ -37,15 +36,15 @@ public class Job
     public string? Link { get; set; }
 }
 
-// Class to represent a video object
-public class Video
+// Class to represent a movie object
+public class Movie
 {
+    public string? Title { get; set; }
+    public string? Score { get; set; }
+    public int Year { get; set; }
+    public string? Cast { get; set; }
     public string? Link { get; set; }
-    public string? VideoTitle { get; set; }
-    public string? Uploader { get; set; }
-    public string? NumberOfViews { get; set; }
 }
-
 
 
 namespace WebScraperDemo
@@ -85,7 +84,7 @@ namespace WebScraperDemo
                 {
                     attributeValue = defaultValue;
                 }
-                return attributeValue.Replace(",","|");
+                return attributeValue.Replace(",", "|");
             }
 
 
@@ -104,7 +103,7 @@ namespace WebScraperDemo
                 }
 
                 //remove start and end whitespaces and replace middle ones with +
-                userInput = userInput.Trim().Replace(" ","+");
+                userInput = userInput.Trim().Replace(" ", "+");
 
                 //Open Chrome
                 IWebDriver driver = new ChromeDriver();
@@ -116,7 +115,7 @@ namespace WebScraperDemo
 
                 // Search for the user-provided term on YouTube
                 driver.Navigate().GoToUrl("https://www.youtube.com/results?search_query=" + userInput + "&sp=CAI%253D");
-                
+
 
 
                 try
@@ -130,7 +129,7 @@ namespace WebScraperDemo
                     //Display error message if cookie could not be accepted
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
-             
+
 
                 //wait for 5 seconds
                 Thread.Sleep(5000);
@@ -165,7 +164,7 @@ namespace WebScraperDemo
                     string link = GetAttributeWithDefault(linkTag, "href", "No link");
 
                     //Make a result variable and assign all video data to it
-                    string result = link +","+videoTitle.Replace(",", "|") + "," + videoUploader.Replace(",", "|") + "," + videoViews;
+                    string result = link + "," + videoTitle.Replace(",", "|") + "," + videoUploader.Replace(",", "|") + "," + videoViews;
 
                     //Make a new video object and add all video data to it
                     Video videoObject = new Video
@@ -174,7 +173,7 @@ namespace WebScraperDemo
                         VideoTitle = videoTitle,
                         Uploader = videoUploader,
                         NumberOfViews = videoViews,
-                        
+
                     };
 
                     //Add video object to videoObjects
@@ -252,7 +251,7 @@ namespace WebScraperDemo
                     var link = job.FindElement(By.ClassName(("search-item-link")));
 
                     //Make a jobresult variable and assign all job data to it
-                    string jobresult = jobTitle.Text.Replace(",", "|") + "," + companyName.Text.Replace(",", "|") + "," + companyLocation.Text.Replace(",","|") + "," + keywoards.Text.Replace(",", "|") + "," + link.GetAttribute("href");
+                    string jobresult = jobTitle.Text.Replace(",", "|") + "," + companyName.Text.Replace(",", "|") + "," + companyLocation.Text.Replace(",", "|") + "," + keywoards.Text.Replace(",", "|") + "," + link.GetAttribute("href");
 
                     //Make a new job object and add all video data to it
                     Job jobObject = new Job
@@ -270,9 +269,9 @@ namespace WebScraperDemo
                     arrCounter++;
 
                     //add job results to string array
-                    allLinesArray[arrCounter] = jobresult;                    
+                    allLinesArray[arrCounter] = jobresult;
                 }
-                
+
 
             }
             if (siteChoice == "3")
@@ -307,7 +306,7 @@ namespace WebScraperDemo
 
                 //Click on Movies Section
                 wait.Until(e => e.FindElement(By.CssSelector("[data-filter='movie']"))).Click();
-                
+
                 //wait for 3 seconds
                 Thread.Sleep(3000);
 
@@ -325,12 +324,12 @@ namespace WebScraperDemo
                 {
                     //Get movie data
                     IWebElement titleElement = eachMovie.FindElement(By.CssSelector("[slot='title']"));
-                    string year = GetAttributeWithDefault(eachMovie,"releaseYear","No release Year");
+                    string year = GetAttributeWithDefault(eachMovie, "releaseYear", "No release Year");
                     string tomatometerScore = GetAttributeWithDefault(eachMovie, "tomatometerscore", "-");
                     string cast = GetAttributeWithDefault(eachMovie, "cast", "-");
                     IWebElement link = eachMovie.FindElement(By.CssSelector("[data-qa='thumbnail-link']"));
                     string linkToMovie = GetAttributeWithDefault(link, "href", "No link");
-                    string title = titleElement.Text.Replace(",","|");
+                    string title = titleElement.Text.Replace(",", "|");
 
                     //Make a movieResult variable and assign all job data to it
                     var movieResult = title + "," + tomatometerScore + "," + year + "," + cast + "," + linkToMovie;
@@ -347,7 +346,7 @@ namespace WebScraperDemo
 
                     //Add movie object to movieObjects
                     movieObjects.Add(movieObject);
-                    
+
                     counter++;
                     arrCounter++;
                     //add job results to string array
@@ -361,7 +360,7 @@ namespace WebScraperDemo
 
 
                 }
-                
+
                 Console.WriteLine("Movies Done");
             }
 
@@ -402,7 +401,7 @@ namespace WebScraperDemo
             Console.WriteLine("Done");
 
             // Open the CSV and JSON file in the default program
-            Process.Start("open","output.csv");
+            Process.Start("open", "output.csv");
             Process.Start("open", "jsonOut.json");
 
             //Must be commented
