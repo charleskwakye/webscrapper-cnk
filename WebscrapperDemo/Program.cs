@@ -401,8 +401,9 @@ namespace WebScraperDemo
             // Output a message indicating that the process is done
             Console.WriteLine("Done");
 
-            // Open the CSV file in the default program
+            // Open the CSV and JSON file in the default program
             Process.Start("open","output.csv");
+            Process.Start("open", "jsonOut.json");
 
             //Must be commented
             Console.ReadLine();
