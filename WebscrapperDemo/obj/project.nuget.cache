@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "G+CtM16ixhJfwQtPoK9MiDDQk45y4vUP9cNOP83G3Ae/EtR049SCGKug3iwbm37S8suS7la2615O8pTnfrhFuQ==",
+  "dgSpecHash": "pd/i30EVyxFHPGFP/M3q3KR9J/Feh/bywpq8xR/B8XAw7Q1fAWG4Pwulwm3nQXyGQEn47BuTzHK7Od+YwCPJLA==",
   "success": true,
-  "projectFilePath": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper/WebscrapperDemo/WebscraperDemo.csproj",
+  "projectFilePath": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper-cnk/WebscrapperDemo/WebscraperDemo.csproj",
   "expectedPackageFiles": [
     "/Users/charlesnanakwakye/.nuget/packages/csvhelper/30.0.1/csvhelper.30.0.1.nupkg.sha512",
     "/Users/charlesnanakwakye/.nuget/packages/newtonsoft.json/13.0.1/newtonsoft.json.13.0.1.nupkg.sha512",

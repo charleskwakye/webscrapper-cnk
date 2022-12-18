@@ -15,7 +15,9 @@ using System.Xml.Linq;
 using Newtonsoft.Json;
 using System.Text.Json.Nodes;
 using System.Diagnostics;
+using System.Security.Claims;
 
+// Class to represent a movie object
 public class Movie
 {
     public string? Title { get; set; }
@@ -24,6 +26,8 @@ public class Movie
     public string? Cast { get; set; }
     public string? Link { get; set; }
 }
+
+// Class to represent a job object
 public class Job
 {
     public string? JobTitle { get; set; }
@@ -32,6 +36,8 @@ public class Job
     public string? Keywoards { get; set; }
     public string? Link { get; set; }
 }
+
+// Class to represent a video object
 public class Video
 {
     public string? Link { get; set; }
@@ -48,20 +54,22 @@ namespace WebScraperDemo
     {
         static void Main(string[] args)
         {
-        
-        Console.WriteLine("What Site do you want to scrape: \n1. Youtube\n2. ICT Jobs\n3. RottenTomatoes");
+            // Prompt the user to choose a site to scrape
+            Console.WriteLine("What Site do you want to scrape: \n1. Youtube\n2. ICT Jobs\n3. RottenTomatoes");
             var siteChoice = Console.ReadLine();
 
+            // Loop until the user provides a valid input (either "1", "2", or "3")
             while (string.IsNullOrEmpty(siteChoice) || siteChoice != "1" && siteChoice != "2" && siteChoice != "3")
             {
                 Console.WriteLine("You have to make a choice:\n1. Youtube\n2.ICT Jobs\n3. RottenTomatoes");
                 siteChoice = Console.ReadLine();
             }
 
-
+            // Initialize variables
             var counter = 1;
             var arrCounter = 0;
 
+            //Make a string array to store the header and 5 other records
             string[] allLinesArray = new string[6];
 
             // Create a list of objects
@@ -69,7 +77,7 @@ namespace WebScraperDemo
             List<Job> jobObjects = new List<Job>();
             List<Video> videoObjects = new List<Video>();
 
-            //Get attribute function
+            // Function to get the value of an attribute for a given element, with a default value if the attribute does not exist
             string GetAttributeWithDefault(IWebElement element, string attributeName, string defaultValue)
             {
                 string attributeValue = element.GetAttribute(attributeName);
@@ -80,18 +88,23 @@ namespace WebScraperDemo
                 return attributeValue.Replace(",","|");
             }
 
+
+            // Scrape YouTube
             if (siteChoice == "1")
             {
+                // Prompt the user to enter a search term
                 Console.WriteLine("Enter what to searh for on youtube:");
                 var userInput = Console.ReadLine();
+
+                // Loop until the user provides a search term
                 while (string.IsNullOrEmpty(userInput))
                 {
                     Console.WriteLine("You have to enter what to search for on youtube:");
                     userInput = Console.ReadLine();
                 }
 
-                //remove start and end whitespaces
-                userInput = userInput.Trim();
+                //remove start and end whitespaces and replace middle ones with +
+                userInput = userInput.Trim().Replace(" ","+");
 
                 //Open Chrome
                 IWebDriver driver = new ChromeDriver();
@@ -101,33 +114,34 @@ namespace WebScraperDemo
 
 
 
-                //rand Search on Youtube
+                // Search for the user-provided term on YouTube
                 driver.Navigate().GoToUrl("https://www.youtube.com/results?search_query=" + userInput + "&sp=CAI%253D");
+                
 
-
-
-                //wait till cookie is visible
-                //IWebElement cookie = wait.Until(driver => driver.FindElement(By.XPath("/html/body/ytd-app/ytd-consent-bump-v2-lightbox/tp-yt-paper-dialog/div[4]/div[2]/div[6]/div[1]/ytd-button-renderer[2]/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]")));
 
                 try
                 {
+                    // Wait until the cookie consent banner is visible and then click the "accept" button
                     IWebElement cookie = wait.Until(driver => driver.FindElement(By.XPath("/html/body/ytd-app/ytd-consent-bump-v2-lightbox/tp-yt-paper-dialog/div[4]/div[2]/div[6]/div[1]/ytd-button-renderer[2]/yt-button-shape/button/yt-touch-feedback-shape/div/div[2]")));
-                    //accept cookie
                     cookie.Click();
                 }
                 catch (Exception ex)
                 {
+                    //Display error message if cookie could not be accepted
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
              
 
                 //wait for 5 seconds
-                Thread.Sleep(5000); // Wait for 5 seconds
+                Thread.Sleep(5000);
 
-               
+                //Make a videoHeader to be added to string array and then csv file
                 string videoHeader = "Video Link,Title,Uploader, Views";
+
+                //Add video header to string array
                 allLinesArray[arrCounter] = videoHeader;
-                Console.WriteLine(allLinesArray[arrCounter]);
+
+                //Run this loop for five times
                 while (counter <= 5)
                 {
                     //wait until video is displayed
@@ -141,13 +155,19 @@ namespace WebScraperDemo
                     //wait until link is displayed
                     wait.Until(driver => driver.FindElement(By.XPath(String.Format("/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div[2]/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[{0}]/div[1]/div/div[1]/div/h3/a", counter))));
 
-
+                    //Get video data
                     string videoTitle = driver.FindElement(By.XPath(String.Format("/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div[2]/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[{0}]/div[1]/div/div[1]/div/h3/a/yt-formatted-string", counter))).Text;
                     string videoUploader = driver.FindElement(By.XPath(String.Format("/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div[2]/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[{0}]/div[1]/div/div[2]/ytd-channel-name/div/div/yt-formatted-string/a", counter))).Text;
                     string videoViews = driver.FindElement(By.XPath(String.Format("/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div[2]/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[{0}]/div[1]/div/div[1]/ytd-video-meta-block/div[1]/div[2]/span[1]", counter))).Text;
-                    string link = driver.FindElement(By.XPath(String.Format("/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div[2]/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[{0}]/div[1]/div/div[1]/div/h3/a", counter))).Text;
+                    IWebElement linkTag = driver.FindElement(By.XPath(String.Format("/html/body/ytd-app/div[1]/ytd-page-manager/ytd-search/div[1]/ytd-two-column-search-results-renderer/div[2]/div/ytd-section-list-renderer/div[2]/ytd-item-section-renderer/div[3]/ytd-video-renderer[{0}]/div[1]/div/div[1]/div/h3/a", counter)));
+
+                    //Get attribute href using GetAttributeWithDefault function
+                    string link = GetAttributeWithDefault(linkTag, "href", "No link");
+
+                    //Make a result variable and assign all video data to it
                     string result = link +","+videoTitle.Replace(",", "|") + "," + videoUploader.Replace(",", "|") + "," + videoViews;
-                    Console.WriteLine(result);
+
+                    //Make a new video object and add all video data to it
                     Video videoObject = new Video
                     {
                         Link = link,
@@ -157,22 +177,28 @@ namespace WebScraperDemo
                         
                     };
 
+                    //Add video object to videoObjects
                     videoObjects.Add(videoObject);
                     arrCounter++;
+
+                    //add results to string array
                     allLinesArray[arrCounter] = result;
-                    
                     counter++;
                 }
 
                 Console.WriteLine("Done Youtube");
             }
+            // Scrape ICT Jobs
             if (siteChoice == "2")
             {
-                Console.WriteLine("Enter what to searh for on ICT Jobs:");
+                // Prompt the user to enter a search term
+                Console.WriteLine("Enter what job to searh for on ICT Jobs:");
                 var userInput = Console.ReadLine();
+
+                // Loop until the user provides a search term
                 while (string.IsNullOrEmpty(userInput))
                 {
-                    Console.WriteLine("You have to enter what to search for on youtube:");
+                    Console.WriteLine("You have to enter a Job title:");
                     userInput = Console.ReadLine();
                 }
                 //Open Chrome
@@ -189,33 +215,46 @@ namespace WebScraperDemo
                 driver.Navigate().GoToUrl("https://www.ictjob.be/en/search-it-jobs?keywords=" + userInput);
 
                 //wait for 4 seconds
-                Thread.Sleep(4000); // Wait for 4 seconds
-                //Click on by date
+                Thread.Sleep(4000);
+
+                //Click on by sort by date
                 driver.FindElement(By.XPath("/html/body/section/div[1]/div/div[2]/div/div/form/div[2]/div/div/div[2]/section/div/div[1]/div[2]/div/div[2]/span[2]/a")).Click();
 
                 //wait for 10 seconds
                 Thread.Sleep(10000);
-                string jobHeader = "Job Title,CompanyName,Company Location, Keywoards, Link to Job";
-                allLinesArray[arrCounter] = jobHeader;
-                IList<IWebElement> allJobs = driver.FindElements(By.CssSelector("[class='search-item  clearfix']"));
-   
 
+                //Make a jobHeader to be added to string array and then csv file
+                string jobHeader = "Job Title,CompanyName,Company Location, Keywoards, Link to Job";
+
+                //Add video header to string array
+                allLinesArray[arrCounter] = jobHeader;
+
+                //Get all jobs 
+                IList<IWebElement> allJobs = driver.FindElements(By.CssSelector("[class='search-item  clearfix']"));
+
+                //Run this loop for five times
                 while (counter <= 5)
                 {
                     //wait until job is displayed
                     wait.Until(driver => driver.FindElement(By.XPath(String.Format("/html/body/section/div[1]/div/div[2]/div/div/form/div[2]/div/div/div[2]/section/div/div[2]/div[1]/div/ul/li[{0}]", counter))));
 
+                    //Get a job using its index
                     IWebElement job = allJobs[arrCounter];
+
+                    //Wait till the job is found in DOM
                     wait.Until(driver => job.FindElement(By.CssSelector(("[class='job-keywords']"))));
 
+                    //Get job data
                     var jobTitle = job.FindElement(By.ClassName(("job-title")));
                     var companyName = job.FindElement(By.ClassName(("job-company")));
                     var companyLocation = job.FindElement(By.ClassName(("job-location")));
                     var keywoards = job.FindElement(By.CssSelector(("[class='job-keywords']")));
                     var link = job.FindElement(By.ClassName(("search-item-link")));
 
+                    //Make a jobresult variable and assign all job data to it
                     string jobresult = jobTitle.Text.Replace(",", "|") + "," + companyName.Text.Replace(",", "|") + "," + companyLocation.Text.Replace(",","|") + "," + keywoards.Text.Replace(",", "|") + "," + link.GetAttribute("href");
-                    Console.WriteLine(counter + " " + jobresult);
+
+                    //Make a new job object and add all video data to it
                     Job jobObject = new Job
                     {
                         JobTitle = jobTitle.Text,
@@ -225,25 +264,30 @@ namespace WebScraperDemo
                         Link = link.GetAttribute("href")
                     };
 
+                    //Add job object to jobObjects
                     jobObjects.Add(jobObject);
                     counter++;
                     arrCounter++;
+
+                    //add job results to string array
                     allLinesArray[arrCounter] = jobresult;                    
                 }
-                Console.WriteLine("Done ICT jobs");
+                
 
             }
             if (siteChoice == "3")
             {
-                Console.WriteLine("Enter a name to search for on ....:");
+                // Prompt the user to enter a search term
+                Console.WriteLine("Enter a movie title to search for on RottenTomatoes:");
                 var userInput = Console.ReadLine();
+                // Loop until the user provides a search term
                 while (string.IsNullOrEmpty(userInput))
                 {
-                    Console.WriteLine("You have to enter a name  to search for on ...:");
+                    Console.WriteLine("You have to enter a movie title:");
                     userInput = Console.ReadLine();
                 }
 
-                
+                //remove start and end whitespaces and replace middle ones with +
                 userInput = userInput.Trim().Replace(" ", "+");
 
                 //Open Chrome
@@ -257,51 +301,59 @@ namespace WebScraperDemo
 
 
 
-                //wait till cookie is visible
+                //wait till cookie is visible and click it
                 IWebElement cookie = wait.Until(driver => driver.FindElement(By.Id("onetrust-accept-btn-handler")));
-
-                //accept cookie
                 cookie.Click();
 
                 //Click on Movies Section
                 wait.Until(e => e.FindElement(By.CssSelector("[data-filter='movie']"))).Click();
                 
-                //wait for 5 seconds
-                Thread.Sleep(3000); 
+                //wait for 3 seconds
+                Thread.Sleep(3000);
 
-                
-                
-
-                
-
+                //Get all movies 
                 IList<IWebElement> allMovies = driver.FindElements(By.TagName("search-page-media-row"));
+
+                //Make a movieHeader to be added to string array and then csv file
                 string movieHeader = "Title,Score,Release Year, Major Cast, Link to movie";
+
+                //Add video header to string array
                 allLinesArray[arrCounter] = movieHeader;
+
+                //Do the following for each movies in all the movies
                 foreach (IWebElement eachMovie in allMovies)
                 {
-                    IWebElement title = eachMovie.FindElement(By.CssSelector("[slot='title']"));
+                    //Get movie data
+                    IWebElement titleElement = eachMovie.FindElement(By.CssSelector("[slot='title']"));
                     string year = GetAttributeWithDefault(eachMovie,"releaseYear","No release Year");
                     string tomatometerScore = GetAttributeWithDefault(eachMovie, "tomatometerscore", "-");
                     string cast = GetAttributeWithDefault(eachMovie, "cast", "-");
                     IWebElement link = eachMovie.FindElement(By.CssSelector("[data-qa='thumbnail-link']"));
                     string linkToMovie = GetAttributeWithDefault(link, "href", "No link");
-                    var movie = title.Text.Replace(",", "|") + "," + tomatometerScore + "," + year + "," + cast + "," + linkToMovie;
-                    string titleString = title.Text.Replace(",", "|");
-                    Console.WriteLine(movie);
+                    string title = titleElement.Text.Replace(",","|");
+
+                    //Make a movieResult variable and assign all job data to it
+                    var movieResult = title + "," + tomatometerScore + "," + year + "," + cast + "," + linkToMovie;
+
+                    //Make a new movie object and add all movie data to it
                     Movie movieObject = new Movie
                     {
-                        Title = titleString,
+                        Title = title,
                         Score = tomatometerScore,
                         Year = int.Parse(year),
                         Cast = cast,
                         Link = linkToMovie
                     };
 
+                    //Add movie object to movieObjects
                     movieObjects.Add(movieObject);
                     
                     counter++;
                     arrCounter++;
-                    allLinesArray[arrCounter] = movie;
+                    //add job results to string array
+                    allLinesArray[arrCounter] = movieResult;
+
+                    //Break code if counter = 6 so only five movies are stored
                     if (counter == 6)
                     {
                         break;
@@ -312,9 +364,14 @@ namespace WebScraperDemo
                 
                 Console.WriteLine("Movies Done");
             }
+
+            // Use streamwriter to create and a file by giving it a string add file extension ie. .json to assign file type
             using (StreamWriter writer = new StreamWriter("jsonOut.json"))
             {
+                // use JsonSerializer to serialize objects into JSON format
                 JsonSerializer serializer = new JsonSerializer();
+
+                // switch statement to choose which list of objects to serialize based on user input
                 switch (siteChoice)
                 {
                     case "1":
@@ -328,19 +385,26 @@ namespace WebScraperDemo
                         break;
                 }
             }
+            // Use streamwriter to create and a file by giving it a string add file extension ie. .csv to assign file type
             using (StreamWriter writer = new StreamWriter("output.csv"))
             {
-
+                // Write the separator line for the CSV file
                 writer.WriteLine("Sep=,");
-                // Loop over the array
+
+                // Loop over the array of lines
                 foreach (string item in allLinesArray)
                 {
+                    // Write each line to the CSV file
                     writer.WriteLine(item);
-                    
                 }
             }
+            // Output a message indicating that the process is done
             Console.WriteLine("Done");
+
+            // Open the CSV file in the default program
             Process.Start("open","output.csv");
+
+            //Must be commented
             Console.ReadLine();
 
 

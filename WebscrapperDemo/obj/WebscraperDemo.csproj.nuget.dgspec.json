@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper/WebscrapperDemo/WebscraperDemo.csproj": {}
+    "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper-cnk/WebscrapperDemo/WebscraperDemo.csproj": {}
   },
   "projects": {
-    "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper/WebscrapperDemo/WebscraperDemo.csproj": {
+    "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper-cnk/WebscrapperDemo/WebscraperDemo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper/WebscrapperDemo/WebscraperDemo.csproj",
+        "projectUniqueName": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper-cnk/WebscrapperDemo/WebscraperDemo.csproj",
         "projectName": "WebscrapperDemo",
-        "projectPath": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper/WebscrapperDemo/WebscraperDemo.csproj",
+        "projectPath": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper-cnk/WebscrapperDemo/WebscraperDemo.csproj",
         "packagesPath": "/Users/charlesnanakwakye/.nuget/packages/",
-        "outputPath": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper/WebscrapperDemo/obj/",
+        "outputPath": "/Users/charlesnanakwakye/Dev_Ops/C#_Dir/webscrapper-cnk/WebscrapperDemo/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/charlesnanakwakye/.nuget/NuGet/NuGet.Config"
